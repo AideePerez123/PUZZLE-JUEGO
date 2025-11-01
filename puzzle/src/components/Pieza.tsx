@@ -1,32 +1,32 @@
 interface PiezaProps {
     indiceImagen: number | null;
-    seleccionarPiezas: (id: number) => void;
-    moverPieza: (id: number) => void;
-    indice: number;
-}
+    onClick: () => void;        
+    isMovable: boolean;
+    }
 
-const Pieza = ({ indiceImagen, seleccionarPiezas, indice, moverPieza }: PiezaProps) => {
+const Pieza = ({ indiceImagen, onClick, isMovable }: PiezaProps) => {
     const imageUrl = "/src/assets/puzzle.jpg";
 
     return (
-        <>
-            {indiceImagen !== null ? (
-                <div
-                    className="border-2 border-amber-400 aspect-square w-full cursor-pointer"
-                    onClick={() => seleccionarPiezas(indice)}
-                    style={{
-                        backgroundImage: `url(${imageUrl})`,
-                        backgroundSize: "300% 300%",
-                        backgroundPosition: `${(indiceImagen % 3) * 33.33}% ${(Math.floor(indiceImagen / 3)) * 33.33}%`,
-                    }}
-                ></div>
-            ) : (
-                <div
-                    className="border-2 border-blue-400 aspect-square w-full cursor-pointer bg-white"
-                    onClick={() => moverPieza(indice)}
-                ></div>
-            )}
-        </>
+        <button
+        onClick={onClick}                    
+        disabled={!isMovable && indiceImagen !== null}
+        className={`
+            border-2 aspect-square w-full transition-all duration-200
+            ${indiceImagen === null 
+            ? 'border-blue-400 bg-white cursor-default' 
+            : 'border-amber-400 cursor-pointer hover:scale-95'
+            }
+            ${isMovable ? 'ring-4 ring-green-400 ring-offset-2' : ''}
+        `}
+        style={{
+            backgroundImage: indiceImagen !== null ? `url(${imageUrl})` : 'none',
+            backgroundSize: '300% 300%',
+            backgroundPosition: indiceImagen !== null 
+            ? `${((indiceImagen - 1) % 3) * 50}% ${Math.floor((indiceImagen - 1) / 3) * 50}%`
+            : 'center',
+        }}
+        />
     );
 };
 
